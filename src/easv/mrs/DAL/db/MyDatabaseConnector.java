@@ -1,11 +1,17 @@
 package easv.mrs.DAL.db;
 
 
+import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
 public class MyDatabaseConnector {
 
 
     //Class will easv.mrs.be included when we start working on DATABASES
-    /*
+
     private SQLServerDataSource dataSource;
 
     public MyDatabaseConnector()
@@ -33,6 +39,6 @@ public class MyDatabaseConnector {
 
         } //Connection gets closed here
     }
-    */
+
 
 }
