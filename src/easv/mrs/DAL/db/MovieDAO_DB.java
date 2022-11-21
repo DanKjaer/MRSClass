@@ -3,10 +3,7 @@ package easv.mrs.DAL.db;
 import easv.mrs.BE.Movie;
 import easv.mrs.DAL.IMovieDataAccess;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,44 +16,65 @@ public class MovieDAO_DB implements IMovieDataAccess {
     }
 
     public List<Movie> getAllMovies() throws Exception {
-        //Create return data structure;
+
         ArrayList<Movie> allMovies = new ArrayList<>();
 
-        //Create a connection
-        try(Connection connection = databaseConnector.getConnection())
+        try (Connection conn = databaseConnector.getConnection())
         {
+            String sql = "SELECT * FROM Movie;";
 
-            //Create SQL command:
-            String sql = "SELECT * FROM movie;";
-            //Create some kind of statement
-            Statement statement = connection.createStatement();
+            Statement statement = conn.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
 
-            //Do relevant treatment of statement:
-            if(statement.execute(sql))
-            {
-                ResultSet resultSet = statement.getResultSet();
-                while(resultSet.next())
-                {
-                    int id = resultSet.getInt("id");
-                    String title = resultSet.getString("title");
-                    int year = resultSet.getInt("year");
+            //Loop through rows from the database result set.
+            while(rs.next()) {
 
-                    Movie movie = new Movie(id,title,year);
-                    allMovies().add(movie);
-                }
+                //Map DB row to Movie object
+                int id = rs.getInt("ID");
+                String title = rs.getString("Title");
+                int year = rs.getInt("Year");
+
+                Movie movie = new Movie(id, year, title);
+                allMovies.add(movie);
             }
+            return allMovies;
 
-
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new Exception("Could not get movies from database", ex);
         }
-        return allMovies();
-
-            //TODO Do this
-        throw new UnsupportedOperationException();
     }
 
     public Movie createMovie(String title, int year) throws Exception {
-        //TODO Do this
-        throw new UnsupportedOperationException();
+
+        String sql = "INSERT INTO Movie (title,year)VALUES (?,?);";
+
+        try (Connection conn = databaseConnector.getConnection()){
+            PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            //Bind parameters
+            stmt.setString(1,title);
+            stmt.setInt(2,year);
+
+            //Run the specified SQL statement
+            stmt.executeUpdate();
+
+            //Get the generated ID from the DB
+            ResultSet rs = stmt.getGeneratedKeys();
+            int id = 0;
+
+            if(rs.next());{
+                id = rs.getInt(1);
+            }
+
+            // Create movie object and send up the layers
+            Movie movie = new Movie(id, year, title);
+            return movie;
+        }catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new Exception("Could not create movie", ex);
+        }
+
     }
 
     public void updateMovie(Movie movie) throws Exception {
