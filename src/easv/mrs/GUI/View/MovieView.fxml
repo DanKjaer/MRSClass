@@ -1,31 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane alignment="center" hgap="10" prefHeight="450.0" prefWidth="500.0" vgap="10" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv.mrs.GUI.Controller.MovieViewController">
-   <columnConstraints>
-      <ColumnConstraints />
-   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints minHeight="10.0" prefHeight="30.0" />
-      <RowConstraints />
-      <RowConstraints />
-   </rowConstraints>
+<AnchorPane prefHeight="566.0" prefWidth="528.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv.mrs.GUI.Controller.MovieViewController">
    <children>
-      <HBox prefHeight="100.0" prefWidth="200.0">
+      <GridPane alignment="center" hgap="10" layoutY="-51.0" prefHeight="587.0" prefWidth="590.0" vgap="10" AnchorPane.bottomAnchor="-35.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="-51.0">
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
          <children>
-            <TextField fx:id="txtTitle" promptText="Title" />
-            <TextField fx:id="txtYear" promptText="Year" />
-            <Button fx:id="btnAddNew" mnemonicParsing="false" onAction="#handleAddNewMovie" text="Add New" />
+            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">
+               <children>
+                  <TextField fx:id="txtTitle" promptText="Title">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </TextField>
+                  <TextField fx:id="txtYear" prefHeight="25.0" prefWidth="87.0" promptText="Year">
+                     <HBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </HBox.margin>
+                  </TextField>
+                  <Button fx:id="btnAddNew" mnemonicParsing="false" onAction="#handleAddNewMovie" text="Add New" />
+                  <Button fx:id="btnUpdate" mnemonicParsing="false" onAction="#handleUpdate" text="Update">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#handleDelete" text="Delete">
+                     <HBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+            <TextField fx:id="txtMovieSearch" GridPane.rowIndex="2" />
+            <ListView fx:id="lstMovies" prefHeight="343.0" prefWidth="514.0" GridPane.rowIndex="4" />
          </children>
-      </HBox>
-      <ListView fx:id="lstMovies" prefHeight="200.0" prefWidth="200.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS" />
-      <TextField fx:id="txtMovieSearch" GridPane.rowIndex="1" />
+      </GridPane>
    </children>
-</GridPane>
+</AnchorPane>

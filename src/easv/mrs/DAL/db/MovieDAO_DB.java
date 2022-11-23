@@ -4,6 +4,7 @@ import easv.mrs.BE.Movie;
 import easv.mrs.DAL.IMovieDataAccess;
 
 import java.sql.*;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,13 +79,46 @@ public class MovieDAO_DB implements IMovieDataAccess {
     }
 
     public void updateMovie(Movie movie) throws Exception {
-        //TODO Do this
-        throw new UnsupportedOperationException();
+
+        try(Connection conn = databaseConnector.getConnection()){
+
+            String sql = "UPDATE Movie SET Title = ?, Year = ? WHERE Id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            //Bind parameters
+            stmt.setString(1, movie.getTitle());
+            stmt.setInt(2, movie.getYear());
+            stmt.setInt(3, movie.getId());
+
+            stmt.executeUpdate();
+        }
+        catch(SQLException ex){
+            ex.printStackTrace();
+            throw new Exception("Could not update movie", ex);
+
+        }
+
+        //UPDATE Movie SET Title = 'Terminator 1', Year = 1990
+        //WHERE Id = 1
     }
 
     public void deleteMovie(Movie movie) throws Exception {
-        //TODO Do this
-        throw new UnsupportedOperationException();
+
+        try(Connection conn = databaseConnector.getConnection()){
+
+            String sql = "DELETE FROM Movie WHERE id = ?;";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            stmt.setInt(1, movie.getId());
+
+            stmt.executeUpdate();
+        }
+        catch(SQLException ex){
+            ex.printStackTrace();
+            throw new Exception("Could not delete movie", ex);
+
+
+        }
     }
 
     public List<Movie> searchMovies(String query) throws Exception {

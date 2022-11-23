@@ -2,10 +2,13 @@ package easv.mrs.GUI.Controller;
 
 import easv.mrs.BE.Movie;
 import easv.mrs.GUI.Model.MovieModel;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 
@@ -17,6 +20,8 @@ public class MovieViewController implements Initializable {
 
     public TextField txtMovieSearch;
     public ListView<Movie> lstMovies;
+    public Button btnUpdate;
+    public Button btnDelete;
 
     @FXML
     private TextField txtTitle;
@@ -40,6 +45,9 @@ public class MovieViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
+        btnUpdate.setDisable(true);
+        btnDelete.setDisable(true);
+
         lstMovies.setItems(movieModel.getObservableMovies());
 
         txtMovieSearch.textProperty().addListener((observableValue, oldValue, newValue) -> {
@@ -48,6 +56,19 @@ public class MovieViewController implements Initializable {
             } catch (Exception e) {
                 displayError(e);
                 //e.printStackTrace();
+            }
+        });
+
+        lstMovies.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Movie>() {
+            @Override
+            public void changed(ObservableValue<? extends Movie> observable, Movie oldValue, Movie newValue) {
+
+                if(newValue != null) {
+                    btnUpdate.setDisable(false);
+                    btnDelete.setDisable(false);
+                    txtTitle.setText(newValue.getTitle());
+                    txtYear.setText(String.valueOf(newValue.getYear()));
+                }
             }
         });
 
@@ -70,6 +91,37 @@ public class MovieViewController implements Initializable {
 
         try {
             movieModel.createNewMovie(title, year);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void handleUpdate(ActionEvent actionEvent) {
+        System.out.println("Movie updated");
+
+        try {
+
+            Movie updatedMovie = lstMovies.getSelectionModel().getSelectedItem();
+
+            String newTitle = txtTitle.getText();
+            int newYear = Integer.parseInt(txtYear.getText());
+
+            updatedMovie.setTitle(newTitle);
+            updatedMovie.setYear(newYear);
+
+
+            movieModel.updateMovie(updatedMovie);
+        } catch (Exception e) {
+            displayError(e);
+        }
+    }
+
+    public void handleDelete(ActionEvent actionEvent) {
+        System.out.println("Delete btn clicked");
+        try{
+            Movie deletedMovie = lstMovies.getSelectionModel().getSelectedItem();
+
+            movieModel.deleteMovie(deletedMovie);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
